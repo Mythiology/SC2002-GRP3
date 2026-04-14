@@ -18,10 +18,6 @@ public class DefendEffect extends StatusEffect {
     }
 
     @Override
-    public void onTurnStart(Combatant target) {
-    }
-
-    @Override
     public void remove(Combatant target) {
         target.setDefense(originalDefense);
     }

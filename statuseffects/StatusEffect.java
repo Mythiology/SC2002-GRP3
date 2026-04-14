@@ -40,11 +40,13 @@ public abstract class StatusEffect {
         return false;
     }
 
-    // Called once when the effect is first applied
-    public abstract void apply(Combatant target);
+    // Called once when the effect is first applied; subclasses override to set up stat changes
+    public void apply(Combatant target) {
+    }
 
-    // Called at the start of each turn while the effect is active
-    public abstract void onTurnStart(Combatant target);
+    // Called at the start of each turn while the effect is active; subclasses override for per-turn behavior
+    public void onTurnStart(Combatant target) {
+    }
 
     // Called when the effect expires; subclasses override to clean up stat changes
     public void remove(Combatant target) {

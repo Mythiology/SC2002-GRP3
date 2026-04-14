@@ -1,13 +1,14 @@
 package combatants;
 
-import statuseffects.ArcaneBlastEffect;
-import statuseffects.StatusEffect;
 import java.util.List;
 
 // Wizard: high ATK glass cannon with Arcane Blast AoE that gains ATK per kill
 public class Wizard extends Player {
+    private int arcaneBlastStacks;
+
     public Wizard() {
         super("Wizard", 200, 50, 10, 20);
+        this.arcaneBlastStacks = 0;
     }
 
     @Override
@@ -20,37 +21,27 @@ public class Wizard extends Player {
         return true;
     }
 
+    // Effective ATK = base ATK + permanent Arcane Blast bonus (+10 per kill)
+    @Override
+    public int getAttack() {
+        return super.getAttack() + arcaneBlastStacks * 10;
+    }
+
     @Override
     public void performSpecialSkill(List<Combatant> targets) {
         if (specialSkillCooldown == 0) {
             for (Combatant target : targets) {
                 if (target.isAlive()) {
-                    int damage = Math.max(0, this.attack - target.getDefense());
+                    int damage = Math.max(0, getAttack() - target.getDefense());
                     target.takeDamage(damage);
 
                     // Each kill immediately grants +10 ATK, affecting subsequent targets
                     if (!target.isAlive()) {
-                        this.attack += 10;
-
-                        ArcaneBlastEffect effect = getArcaneBlastEffect();
-                        if (effect == null) {
-                            effect = new ArcaneBlastEffect();
-                            this.addStatusEffect(effect);
-                        }
-                        effect.addStack();
+                        arcaneBlastStacks++;
                     }
                 }
             }
             this.specialSkillCooldown = 3;
         }
-    }
-
-    private ArcaneBlastEffect getArcaneBlastEffect() {
-        for (StatusEffect effect : this.getStatusEffects()) {
-            if (effect instanceof ArcaneBlastEffect) {
-                return (ArcaneBlastEffect) effect;
-            }
-        }
-        return null;
     }
 }
