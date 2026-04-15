@@ -350,12 +350,4 @@ public class BattleEngine {
         }
         return count;
     }
-
-    public int getRoundNumber() {
-        return roundNumber;
-    }
-
-    public Difficulty getDifficulty() {
-        return difficulty;
-    }
 }
